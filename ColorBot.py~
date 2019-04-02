@@ -34,7 +34,7 @@ class image_convertor:
 		#Subscribe to AR Marker Topic callback on spotting a marker
 		self.image_sub = rospy.Subscriber("/ar_pose_marker", AlvarMarkers, self.imagecallback)
 		#Subscribe to Image Topic, uses the camera to see colors in front of the robot
-		self.image_sub = rospy.Subscriber("/camera/rgb/image_color", Image, self.colorcallback)
+		##############self.image_sub = rospy.Subscriber("/camera/rgb/image_color", Image, self.colorcallback)
 		#Creates a publisher for our base so that we can move the robot by publishing Twist Messages
 		self.pub = rospy.Publisher("/mobile_base/commands/velocity", Twist, queue_size=10)
 		rospy.spin()

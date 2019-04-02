@@ -18,13 +18,14 @@ import numpy as np
 from ar_track_alvar_msgs.msg import AlvarMarkers
 
 PI = 3.1415926535897
-canMove = True
+canMove = False
 TWISTMSG = Twist()
 SPEED = 0.2
 x = 320
 y = 240
 radius = 25
 marker = 3
+markerb = 0
 
 class image_convertor:
 
@@ -34,7 +35,7 @@ class image_convertor:
 		#Subscribe to AR Marker Topic callback on spotting a marker
 		self.image_sub = rospy.Subscriber("/ar_pose_marker", AlvarMarkers, self.imagecallback)
 		#Subscribe to Image Topic, uses the camera to see colors in front of the robot
-		self.image_sub = rospy.Subscriber("/camera/rgb/image_color", Image, self.colorcallback)
+		self.image_sub = rospy.Subscriber("/camera/rgb/image_raw", Image, self.colorcallback)
 		#Creates a publisher for our base so that we can move the robot by publishing Twist Messages
 		self.pub = rospy.Publisher("/mobile_base/commands/velocity", Twist, queue_size=10)
 		rospy.spin()
@@ -57,10 +58,10 @@ class image_convertor:
 		#If we want to move clockwise our velocity must be negative, as a result we also have to negat the endTime result as we cannot have negative time
     		if Clockwise:
 			print("Right Turn")
-	        	TWISTMSG.angular.z = -SPEED*5 #Set the angular speed to the speed we specified
+	        	TWISTMSG.angular.z = -SPEED*3 #Set the angular speed to the speed we specified
     		else:
 			print("Left Turn")
-        		TWISTMSG.angular.z = SPEED*5 #Set the angular speed to the speed we specified
+        		TWISTMSG.angular.z = SPEED*3 #Set the angular speed to the speed we specified
 		self.pub.publish(TWISTMSG)
 
 	def speedUp(self):
@@ -126,7 +127,7 @@ class image_convertor:
 				posZ = data.markers[i].pose.pose.position.z
 
 				#Verify the marker ID
-				if data.markers[i].id == marker: 
+				if data.markers[i].id == marker or data.marks[i].id == 0: 
 					print("Positions")
 					print(posX)
 					print (posZ)
@@ -173,7 +174,8 @@ class image_convertor:
 	    global canMove
 		
 	    try:
-		cv_image = np.asarray(self.bridge.imgmsg_to_cv(data, "bgr8"))
+		cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+#		cv_image = np.asarray(self.bridge.imgmsg_to_cv(data, "bgr8"))
 	    except CvBridgeError as e:
 		print(e)
 
