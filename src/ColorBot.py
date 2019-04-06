@@ -53,21 +53,23 @@ class image_convertor:
 
 	def turn(self, Clockwise):
 		global SPEED
-		SPEED = .3
+		SPEED = .5
 
 		#If we want to move clockwise our velocity must be negative, as a result we also have to negat the endTime result as we cannot have negative time
     		if Clockwise:
 			print("Right Turn")
-	        	TWISTMSG.angular.z = -SPEED*3 #Set the angular speed to the speed we specified
+			TWISTMSG.linear.x = 0
+	        	TWISTMSG.angular.z = -SPEED #Set the angular speed to the speed we specified
     		else:
 			print("Left Turn")
-        		TWISTMSG.angular.z = SPEED*3 #Set the angular speed to the speed we specified
+			TWISTMSG.linear.x = 0
+        		TWISTMSG.angular.z = SPEED #Set the angular speed to the speed we specified
 		self.pub.publish(TWISTMSG)
 
 	def speedUp(self):
 	    #speed up the robot by setting the speed higher
 		global SPEED
-		SPEED = .45
+		SPEED = .3
 
 
 	def defaultSpeed(self):
@@ -114,8 +116,8 @@ class image_convertor:
 		global canMove
 		
 		if canMove:
-			lowerXBound = -.1 #Lower Bound for straight movement
-			upperXBound = .1 #Upper Bound for straight Movement
+			lowerXBound = -.15 #Lower Bound for straight movement
+			upperXBound = .15 #Upper Bound for straight Movement
 
 			lowerZBound = .45 #Lower Bound before backing up
 			upperZBound = .8 #Upper Bound before speeding up
