@@ -12,12 +12,12 @@ def show_webcam(mirror=False):
     cam = cv2.VideoCapture(0) # Capture Webcam
     BLUE = (255, 0, 0)
     while True:
+        
             ret_val, frame = cam.read() # Read each frame from camera
-            #gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             ar_dict = aruco.Dictionary_get(aruco.DICT_6X6_250)
             param = aruco.DetectorParameters_create()
             corners, ids, rejectedImgPoints = aruco.detectMarkers(frame, ar_dict, parameters=param)
-            #
             gray = aruco.drawDetectedMarkers(frame, corners)
             if mirror: 
                 frame = cv2.flip(frame, 1)
@@ -30,6 +30,16 @@ def show_webcam(mirror=False):
                 y = centerPointCalculation(Ycord)
                 
                 center = (int(x), int(y))
+                print(str(x) +","+ str(y))
+                LEFT_BOUND = 215
+                RIGHT_BOUND = 430
+                if x < LEFT_BOUND:
+                    print("LEFT")
+                elif x > RIGHT_BOUND:
+                    print("RIGHT")
+                else:
+                    print("STRAIGHT")
+                print("\n")
                 #center = (corners[0][0][0][0] + (corners[0][0][1][0] - corners[0][0][0][0])/2, corners[0][0][1][1] + (corners[0][0][0][1] - corners[0][1][1])/2)
                 cv2.circle(gray, center, 5, BLUE, thickness=-1)
             cv2.imshow("Vision", gray)
