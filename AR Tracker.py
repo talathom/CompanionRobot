@@ -22,12 +22,10 @@ def show_webcam(mirror=False):
             if mirror: 
                 frame = cv2.flip(frame, 1)
             if(len(corners) > 0):
-                
-                Xcord = [corners[0][0][0][0], corners[0][0][1][0], corners[0][0][2][0]]
-                Ycord = [corners[0][0][0][1], corners[0][0][1][1], corners[0][0][2][1]]
-                
-                x = centerPointCalculation(Xcord)
-                y = centerPointCalculation(Ycord)
+                Xcord = [corners[0][0][0][0], corners[0][0][2][0]]
+                Ycord = [corners[0][0][0][1], corners[0][0][2][1]]
+                x = midPointCalculation(Xcord)
+                y = midPointCalculation(Ycord)
                 
                 center = (int(x), int(y))
                 print(str(x) +","+ str(y))
@@ -40,7 +38,7 @@ def show_webcam(mirror=False):
                 else:
                     print("STRAIGHT")
                 print("\n")
-                #center = (corners[0][0][0][0] + (corners[0][0][1][0] - corners[0][0][0][0])/2, corners[0][0][1][1] + (corners[0][0][0][1] - corners[0][1][1])/2)
+                
                 cv2.circle(gray, center, 5, BLUE, thickness=-1)
             cv2.imshow("Vision", gray)
             if cv2.waitKey(1) == 27:
@@ -48,25 +46,8 @@ def show_webcam(mirror=False):
     cam.release() # Release capture
     cv2.destroyAllWindows() # Close windows
     
-def centerPointCalculation(points):
-    
-    TOLERANCE = 40
-    coordinate = -1
-    difference = points[0] - points[1]
-    if difference < TOLERANCE:
-        difference = abs(points[0] - points[2])
-        if points[2] < points[0]:
-            coordinate = points[2] + difference/2
-        else:
-            coordinate = points[0] + difference/2
-    else:
-        if points[1] < points[0]:
-            coordinate = points[1] + difference/2
-        else:
-            coordinate = points[0] + difference/2
-    return coordinate
-    
-
+def midPointCalculation(points):
+    return (points[0] + points[1])/2
 
 def main():
     show_webcam(mirror=True)
